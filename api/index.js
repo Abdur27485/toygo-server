@@ -6,7 +6,7 @@ const port = process.env.PORT || 27485;
 require('dotenv').config()
 
 // MongoDB connect
-const uri = `mongodb://${process.env.mongo_UserName}:${process.env.mongo_Password}@ac-jhe2rq3-shard-00-00.ja7anyt.mongodb.net:27017,ac-jhe2rq3-shard-00-01.ja7anyt.mongodb.net:27017,ac-jhe2rq3-shard-00-02.ja7anyt.mongodb.net:27017/?ssl=true&replicaSet=atlas-laaly2-shard-0&authSource=admin&retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.mongoUserName}:${process.env.mongoPassword}@milestone11.ja7anyt.mongodb.net/?retryWrites=true&w=majority`;
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
@@ -51,9 +51,9 @@ async function run() {
       res.send(result)
     })
 
-    app.get('/toy/:id', async(req, res) =>{
+    app.get('/toy/:id', async (req, res) => {
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)};
+      const query = { _id: new ObjectId(id) };
       const result = await toysCollection.findOne(query);
       res.send(result)
     })
@@ -87,7 +87,7 @@ async function run() {
 
     app.delete('/toy/:id', async (req, res) => {
       const id = req.params.id;
-      const query = { _id : new ObjectId(id)}
+      const query = { _id: new ObjectId(id) }
       const result = await toysCollection.deleteOne(query);
       res.send(result)
     })
@@ -95,6 +95,10 @@ async function run() {
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Database connected...");
+    //to avoid bugs calling listen here.
+    app.listen(port, () => {
+      console.log('port is listening.')
+    })
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
@@ -107,10 +111,6 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.send('app is running!')
+  res.send('app is running!!!!')
 })
 
-
-app.listen(port, () => {
-  console.log('port is listening.')
-})
